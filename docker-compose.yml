@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:18.4.0-slim
+    container_name: ecodenuncia-oracle-db
+    environment:
+      ORACLE_PASSWORD: 310302
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+  app:
+    build:
+      context: ./EcoDenuncia
+      dockerfile: Dockerfile
+    container_name: ecodenuncia-app
+    environment:
+      ORACLE_USER: RM555678
+      ORACLE_PASS: 310302
+      ORACLE_HOST: oracle.fiap.com.br
+      ORACLE_PORT: 1521
+      ORACLE_SID: ORCL
+    ports:
+      - "8080:8080"
+    depends_on:
+      - oracle-db
+
+volumes:
+  oracle-data:
